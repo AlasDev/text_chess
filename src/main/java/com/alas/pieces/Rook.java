@@ -3,8 +3,6 @@ package com.alas.pieces;
 import com.alas.util.BasicChessPiece;
 
 public class Rook implements BasicChessPiece {
-    private String whiteRook = "♜";
-    private String blackRook = "♖";
 
     private final Boolean team;
     private final String icon;
@@ -16,9 +14,9 @@ public class Rook implements BasicChessPiece {
     public Rook (Boolean team) {
         this.team = team;
         if (team) {
-            this.icon = whiteRook;
+            this.icon = "♜";
         } else {
-            this.icon = blackRook;
+            this.icon = "♖";
         }
     }
 

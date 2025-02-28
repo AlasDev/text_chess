@@ -3,8 +3,6 @@ package com.alas.pieces;
 import com.alas.util.BasicChessPiece;
 
 public class King implements BasicChessPiece {
-    private String whiteKing = "♚";
-    private String blackKing = "♔";
 
     private final Boolean team;
     private final String icon;
@@ -16,9 +14,9 @@ public class King implements BasicChessPiece {
     public King (Boolean team) {
         this.team = team;
         if (team) {
-            this.icon = whiteKing;
+            this.icon = "♚";
         } else {
-            this.icon = blackKing;
+            this.icon = "♔";
         }
     }
 

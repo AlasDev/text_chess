@@ -3,8 +3,6 @@ package com.alas.pieces;
 import com.alas.util.BasicChessPiece;
 
 public class Bishop implements BasicChessPiece {
-    private String whiteBishop = "♝";
-    private String blackBishop = "♗";
 
     private final Boolean team;
     private final String icon;
@@ -16,9 +14,9 @@ public class Bishop implements BasicChessPiece {
     public Bishop (Boolean team) {
         this.team = team;
         if (team) {
-            this.icon = whiteBishop;
+            this.icon = "♝";
         } else {
-            this.icon = blackBishop;
+            this.icon = "♗";
         }
     }
 

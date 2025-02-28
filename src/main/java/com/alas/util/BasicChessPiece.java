@@ -2,7 +2,7 @@ package com.alas.util;
 
 public interface BasicChessPiece {
 
-    public Boolean getTeam();
+    Boolean getTeam();
 
-    public String getIcon();
+    String getIcon();
 }
