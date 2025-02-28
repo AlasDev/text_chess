@@ -159,6 +159,20 @@ public class Board {
     }
 
     /**
+     * Checks if the coords exist in the board.
+     * @param coords coords you want to check
+     * @return 'true' if they are valid coords, 'false' if out of bounds
+     */
+    public Boolean isValidCoords(int[] coords){
+        // vertical
+        if (coords[0] >= 0 && coords[0] < 8) return false; //row
+        //horizontal
+        if (coords[1] >= 0 && coords[1] < 8) return false; //column
+
+        return true;
+    }
+
+    /**
      * Method to ask the player to make a move.
      * @param team 'white' if true, 'black' if false.
      */
