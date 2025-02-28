@@ -113,6 +113,30 @@ public class Move extends Board {
                         west = new int[]{coords[0], coords[1]-1};
                     }
                     break;
+
+                case "Knight":
+                    int[][] knightMoves = {
+                            {2, 1},   // Move north 2, east 1
+                            {2, -1},  // Move north 2, west 1
+                            {-2, 1},  // Move south 2, east 1
+                            {-2, -1}, // Move south 2, west 1
+                            {1, 2},   // Move east 1, north 2
+                            {1, -2},  // Move east 1, south 2
+                            {-1, 2},  // Move west 1, north 2
+                            {-1, -2}  // Move west 1, south 2
+                    };
+
+                    for (int[] move : knightMoves) {
+                        int[] target = new int[] {
+                                coords[0] + move[0],
+                                coords[1] + move[1]
+                        };
+
+                        if (isValidCoords(target) && getBoardSquare(target).getChessPiece() == null) {
+                            moves.add(target);
+                        }
+                    }
+                    break;
             }
         }
         return moves;
