@@ -4,13 +4,9 @@ import com.alas.util.BasicChessPiece;
 
 public class BoardSquare {
     private BasicChessPiece chessPiece;
-    private String icon = " ";
+    private String icon;
     String tileWhite = "⬜";
     String tileBlack = "⬛";
-
-    public BoardSquare () {
-        this.chessPiece = null;
-    }
 
     public BoardSquare (BasicChessPiece basicChessPiece) {
         this.chessPiece = basicChessPiece;
