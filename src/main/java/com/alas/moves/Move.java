@@ -221,6 +221,33 @@ public class Move extends Board {
                         west = new int[]{coords[0], coords[1]-1};
                     }
                     break;
+
+                case "Rook":
+                    north = new int[]{coords[0]+1, coords[1]};       // Move up
+                    east = new int[]{coords[0], coords[1]+1};        // Move right
+                    south = new int[]{coords[0]-1, coords[1]};       // Move down
+                    west = new int[]{coords[0], coords[1]-1};        // Move left
+
+                    while (isValidCoords(north) && getBoardSquare(north).getChessPiece() == null){
+                        moves.add(north);
+                        north = new int[]{coords[0]+1, coords[1]};
+                    }
+
+                    while (isValidCoords(east) && getBoardSquare(east).getChessPiece() == null){
+                        moves.add(east);
+                        east = new int[]{coords[0], coords[1]+1};
+                    }
+
+                    while (isValidCoords(south) && getBoardSquare(south).getChessPiece() == null){
+                        moves.add(south);
+                        south = new int[]{coords[0]-1, coords[1]};
+                    }
+
+                    while (isValidCoords(west) && getBoardSquare(west).getChessPiece() == null){
+                        moves.add(west);
+                        west = new int[]{coords[0], coords[1]-1};
+                    }
+                    break;
             }
         }
         return moves;
