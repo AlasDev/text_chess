@@ -73,44 +73,36 @@ public class Move extends Board {
                     southWest = new int[]{coords[0]-1, coords[1]+1}; // Move down-left
                     west = new int[]{coords[0], coords[1]-1};        // Move left
 
-                    while (isValidCoords(northWest) && getBoardSquare(northWest).getChessPiece() == null){
+                    if (isValidCoords(northWest) && getBoardSquare(northWest).getChessPiece() == null){
                         moves.add(northWest);
-                        northWest = new int[]{coords[0]-1, coords[1]-1};
                     }
 
-                    while (isValidCoords(north) && getBoardSquare(north).getChessPiece() == null){
+                    if (isValidCoords(north) && getBoardSquare(north).getChessPiece() == null){
                         moves.add(north);
-                        north = new int[]{coords[0]+1, coords[1]};
                     }
 
-                    while (isValidCoords(northEast) && getBoardSquare(northEast).getChessPiece() == null){
+                    if (isValidCoords(northEast) && getBoardSquare(northEast).getChessPiece() == null){
                         moves.add(northEast);
-                        northEast = new int[]{coords[0]+1, coords[1]-1};
                     }
 
-                    while (isValidCoords(east) && getBoardSquare(east).getChessPiece() == null){
+                    if (isValidCoords(east) && getBoardSquare(east).getChessPiece() == null){
                         moves.add(east);
-                        east = new int[]{coords[0], coords[1]+1};
                     }
 
-                    while (isValidCoords(southEast) && getBoardSquare(southEast).getChessPiece() == null){
+                    if (isValidCoords(southEast) && getBoardSquare(southEast).getChessPiece() == null){
                         moves.add(southEast);
-                        southEast = new int[]{coords[0]+1, coords[1]+1};
                     }
 
-                    while (isValidCoords(south) && getBoardSquare(south).getChessPiece() == null){
+                    if (isValidCoords(south) && getBoardSquare(south).getChessPiece() == null){
                         moves.add(south);
-                        south = new int[]{coords[0]-1, coords[1]};
                     }
 
-                    while (isValidCoords(southWest) && getBoardSquare(southWest).getChessPiece() == null){
+                    if (isValidCoords(southWest) && getBoardSquare(southWest).getChessPiece() == null){
                         moves.add(southWest);
-                        southWest = new int[]{coords[0]-1, coords[1]+1};
                     }
 
-                    while (isValidCoords(west) && getBoardSquare(west).getChessPiece() == null){
+                    if (isValidCoords(west) && getBoardSquare(west).getChessPiece() == null){
                         moves.add(west);
-                        west = new int[]{coords[0], coords[1]-1};
                     }
                     break;
 
