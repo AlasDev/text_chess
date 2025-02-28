@@ -137,6 +137,48 @@ public class Move extends Board {
                         }
                     }
                     break;
+
+                case "Pawn":
+                    Boolean team = getBoardSquare(coords).getChessPiece().getTeam();
+                    if (team) { //white
+                        int[] firstMove = new int[] {coords[0]-2, coords[1]}; // Move up by 2
+                        northWest = new int[]{coords[0]-1, coords[1]-1}; // Move up-left
+                        north = new int[]{coords[0]-1, coords[1]};       // Move up
+                        northEast = new int[]{coords[0]-1, coords[1]+1}; // Move up-right
+
+                        if (isValidCoords(firstMove) && getBoardSquare(firstMove).getChessPiece() == null && coords[0] == 6) {
+                            moves.add(firstMove);
+                        }
+                        if (isValidCoords(northWest) && getBoardSquare(northWest).getChessPiece() != null) {
+                            moves.add(northWest);
+                        }
+                        if (isValidCoords(north) && getBoardSquare(north).getChessPiece() == null) {
+                            moves.add(north);
+                        }
+                        if (isValidCoords(northEast) && getBoardSquare(northEast).getChessPiece() != null) {
+                            moves.add(northEast);
+                        }
+                    } else { //black
+                        int[] firstMove = new int[] {coords[0]+2, coords[1]}; // Move up by 2
+                        southWest = new int[]{coords[0]+1, coords[1]-1}; // Move down-left
+                        south = new int[]{coords[0]+1, coords[1]};       // Move down
+                        southEast = new int[]{coords[0]+1, coords[1]+1}; // Move down-right
+
+                        if (isValidCoords(firstMove) && getBoardSquare(firstMove).getChessPiece() == null && coords[0] == 1) {
+                            moves.add(firstMove);
+                        }
+                        if (isValidCoords(southWest) && getBoardSquare(southWest).getChessPiece() != null) {
+                            moves.add(southWest);
+                        }
+                        if (isValidCoords(south) && getBoardSquare(south).getChessPiece() == null) {
+                            moves.add(south);
+                        }
+                        if (isValidCoords(southEast) && getBoardSquare(southEast).getChessPiece() != null) {
+                            moves.add(southEast);
+                        }
+                    }
+                    break;
+
             }
         }
         return moves;
