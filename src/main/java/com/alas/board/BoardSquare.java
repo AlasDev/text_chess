@@ -4,7 +4,8 @@ import com.alas.util.BasicChessPiece;
 
 public class BoardSquare {
     private BasicChessPiece chessPiece;
-    private String icon;
+    private String icon; //piece icon shown on the board
+    private String tile; //tile color
     String tileWhite = "⬜";
     String tileBlack = "⬛";
 
@@ -27,19 +28,26 @@ public class BoardSquare {
         return icon;
     }
 
-    public void setIcon(boolean color) {
+    public String getTile() {
+        return tile;
+    }
+
+    public void setTile(boolean color) {
         if (color) {
-            this.icon = tileWhite;
+            this.tile = tileWhite;
         } else {
-            this.icon = tileBlack;
+            this.tile = tileBlack;
         }
     }
 
+    /**
+     * If the chess piece is not null, it sets the icon to the chess piece icon, otherwise it sets the tile color
+     */
     public void refreshIcon() {
         if (getChessPiece() != null) {
             this.icon = getChessPiece().getIcon();
         } else {
-            this.icon = " ";
+            this.icon = this.tile;
         }
     }
 }

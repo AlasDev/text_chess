@@ -9,10 +9,17 @@ public class Main {
         board.initializeBoard();
         board.printBoard();
 
-        board.movePieceOnTurn(true); //white team
-        board.printBoard();
+        boolean isTurnOfTeam = true; //white team starts
+        int maxTurns = 100;
+        int currentTurn = 1;
+        while (currentTurn <= maxTurns) {
+            System.out.println("Turn N°" + currentTurn + " of " + maxTurns);
 
-        board.movePieceOnTurn(false); //black team
-        board.printBoard();
+            board.movePieceOnTurn(isTurnOfTeam);
+            board.printBoard();
+
+            currentTurn++; //end of turn
+            isTurnOfTeam = !isTurnOfTeam; //switch team turn
+        }
     }
 }

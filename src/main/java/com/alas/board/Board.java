@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Board {
-    //board[vertical][horizontal]
-    public BoardSquare[][] board = new BoardSquare[8][8];
+    public static final int BOARD_SIZE = 8;
+    public BoardSquare[][] board = new BoardSquare[BOARD_SIZE][BOARD_SIZE]; //board[vertical][horizontal]
 
+    final Scanner scanner = new Scanner(System.in);
     /**
-     * Reset the whole board and places all pieces of both teams on their starting positions
+     * Reset the whole board and places all pieces of both teams in their starting positions
      */
     public void initializeBoard() {
         wipeBoard();
@@ -22,14 +23,14 @@ public class Board {
         resetTeamPieces(false); //black team
 
         refreshTiles();
-        System.out.println("Board initialized");
+        //System.out.println("Board initialized");
     }
 
     /**
      * Places all chess pieces from both teams on their starting positions.
      * @param team 'true' is white, 'false' is black
      */
-    private void resetTeamPieces(Boolean team) {
+    private void resetTeamPieces(boolean team) {
         int i, j; //indicates rows -> i is back, j is front
         if (team) { //white
             j = 6;
@@ -66,7 +67,11 @@ public class Board {
         int horizontal = 0;
         for(int i = 0; i < board[0].length; i++){
             for(int j = 0; j < board[1].length; j++){
-                System.out.print("[" + board[i][j].getIcon() + "]");
+                if(board[i][j].getIcon() != null) {
+                    System.out.print("[" + board[i][j].getIcon() + "]");
+                } else {
+                    System.out.print("[" + board[i][j].getTile() + "]");
+                }
             }
             System.out.println("(" + vertical + ")");
             vertical++;
@@ -87,7 +92,7 @@ public class Board {
             for(int j = 0; j < board[1].length; j++){
                 color = !color;
                 board[i][j] = new BoardSquare(null);
-                board[i][j].setIcon(color);
+                board[i][j].setTile(color);
             }
         }
     }
@@ -106,14 +111,6 @@ public class Board {
                 }
             }
         }
-    }
-
-    /**
-     * Refreshes tile color of a single tile
-     * @param coords coordinates of theBoardSquare you want to refresh
-     */
-    public void refreshTiles(int[] coords){
-        board[coords[0]][coords[1]].refreshIcon();
     }
 
     /**
@@ -164,12 +161,8 @@ public class Board {
      * @return 'true' if they are valid coords, 'false' if out of bounds
      */
     public Boolean isValidCoords(int[] coords){
-        // vertical
-        if (coords[0] >= 0 && coords[0] < 8) return false; //row
-        //horizontal
-        if (coords[1] >= 0 && coords[1] < 8) return false; //column
-
-        return true;
+        //vertical and horizontal (row and column)
+        return coords[0] >= 0 && coords[0] < BOARD_SIZE && coords[1] >= 0 && coords[1] < BOARD_SIZE;
     }
 
     /**
@@ -183,27 +176,22 @@ public class Board {
         } else {
             teamName = "Black";
         }
+        int[] from = {}; //starting coords
+        int[] to = {}; //destination coords
 
-        int[] from = new int[2];
-        int[] to = new int[2];
-
-        System.out.println("\nTeam '" + teamName + "' turn. Make a move!");
+        System.out.println("\nIt's " + teamName + "' turn. Make a move!");
 
         System.out.println("These are the pieces of your team: ");
         getListOfPiecesOfTeam(team).forEach(System.out::println);
 
         System.out.println("Enter the coordinates of the piece you wish to move: ");
-        Scanner scanner = new Scanner(System.in);
-
         boolean searchingFrom = true;
         while (searchingFrom) { //loops until a valid pair of coords with a valid piece in them is found
-            System.out.println("From vertical: ");
-            from[0] = scanner.nextInt();
-            System.out.println("From horizontal: ");
-            from[1] = scanner.nextInt();
+            System.out.println("From [vertical, horizontal]: ");
+            from = parseCoords(scanner.nextLine());
 
-            if (getBoardSquare(from).getChessPiece() != null && getBoardSquare(from).getChessPiece().getTeam() == team) {
-                searchingFrom = false; //suitable starting position was found, end loop
+            if (from != null && getBoardSquare(from).getChessPiece() != null && getBoardSquare(from).getChessPiece().getTeam() == team) {
+                searchingFrom = false; //a suitable starting position was found, end loop
                 System.out.println("Piece selected: " + getBoardSquare(from).getIcon() + " at '" + Arrays.toString(from) + "'.");
             } else {
                 System.out.println("Invalid Move! You can only move pieces of your team!");
@@ -214,21 +202,40 @@ public class Board {
 
         boolean searchingTo = true;
         while (searchingTo) { //loops until a valid pair of coords is found
-            System.out.println("To vertical: ");
-            to[0] = scanner.nextInt();
-            System.out.println("To horizontal: ");
-            to[1] = scanner.nextInt();
-
-            //if boardSquare is empty or piece in it is not an ally
-            if (getBoardSquare(to).getChessPiece() == null || getBoardSquare(to).getChessPiece().getTeam() != team) {
-                searchingTo = false; //suitable destination was found, end loop
-                //scanner.close();
+            System.out.println("To [vertical, horizontal]: ");
+            to = parseCoords(scanner.nextLine());
+            //if boardSquare is empty or a piece in it is not an ally
+            if (to != null && getBoardSquare(to).getChessPiece() == null || to != null && getBoardSquare(to).getChessPiece().getTeam() != team) {
+                searchingTo = false; //a suitable destination was found, end loop
                 move(from, to);
             } else {
                 System.out.println("Invalid Move! Insert the coords of a valid position!");
             }
         }
         refreshTiles();
+    }
+
+    public static int[] parseCoords(String input) {
+        input = input.trim().toLowerCase();
+        try {
+            // Format: "2 3" or "2,3"
+            if (input.matches("\\d+\\s*,?\\s*\\d+")) {
+                String[] parts = input.split("[,\\s]+");
+                int row = Integer.parseInt(parts[0]);
+                int col = Integer.parseInt(parts[1]);
+                return new int[]{row, col};
+            }
+
+            // Format: "b2" (chess notation)
+            if (input.matches("[a-h][1-8]")) {
+                int col = input.charAt(0) - 'a';
+                int row = 8 - Character.getNumericValue(input.charAt(1)); // 8 - row for 0-indexed arrays
+                return new int[]{row, col};
+            }
+        } catch (Exception e) {
+            System.err.println("Invalid coordinate format. Please use 'row col', 'row,col', or chess notation like 'b2'.");
+        }
+        return null;
     }
 
     /**
