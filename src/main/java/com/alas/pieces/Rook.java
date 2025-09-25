@@ -1,31 +1,21 @@
 package com.alas.pieces;
 
-import com.alas.util.BasicChessPiece;
+import com.alas.util.ChessPiece;
 import com.alas.util.PieceIcons;
+import com.alas.util.Team;
 
-public class Rook implements BasicChessPiece {
-
-    private final boolean team;
-    private final String icon;
+public class Rook extends ChessPiece {
 
     /**
      * Constructor of the Rook chess piece
-     * @param team 'true' is white, 'false' is black
+     * @param team 'WHITE' is white, 'BLACK' is black
      */
-    public Rook (boolean team) {
-        this.team = team;
-        if (team) {
-            this.icon = PieceIcons.ROOK_W.getIcon();
+    public Rook (Team team) {
+        setTeam(team);
+        if (team == Team.WHITE) {
+            setIcon(PieceIcons.ROOK_W);
         } else {
-            this.icon = PieceIcons.ROOK_B.getIcon();
+            setIcon(PieceIcons.ROOK_B);
         }
-    }
-
-    public Boolean getTeam() {
-        return team;
-    }
-
-    public String getIcon() {
-        return icon;
     }
 }

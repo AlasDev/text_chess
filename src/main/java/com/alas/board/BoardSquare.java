@@ -1,53 +1,66 @@
 package com.alas.board;
 
-import com.alas.util.BasicChessPiece;
+import com.alas.util.ChessPiece;
+import com.alas.util.PieceIcons;
 
 public class BoardSquare {
-    private BasicChessPiece chessPiece;
-    private String icon; //piece icon shown on the board
+    private ChessPiece chessPiece;
     private String tile; //tile color
-    String tileWhite = "⬜";
-    String tileBlack = "⬛";
+    private String displayedIcon;
 
-    public BoardSquare (BasicChessPiece basicChessPiece) {
-        this.chessPiece = basicChessPiece;
-        if (basicChessPiece != null) {
-            this.icon = basicChessPiece.getIcon();
-        }
-    }
-
-    public BasicChessPiece getChessPiece() {
-        return chessPiece;
-    }
-
-    public void setChessPiece(BasicChessPiece chessPiece) {
+    public BoardSquare (ChessPiece chessPiece) {
         this.chessPiece = chessPiece;
     }
 
-    public String getIcon() {
-        return icon;
+    public ChessPiece getChessPiece() {
+        return chessPiece;
+    }
+
+    public void setChessPiece(ChessPiece chessPiece) {
+        this.chessPiece = chessPiece;
+    }
+
+    public PieceIcons getIcon() {
+        return this.chessPiece.getIcon();
     }
 
     public String getTile() {
         return tile;
     }
 
-    public void setTile(boolean color) {
+    public void setTileColor(boolean color) {
         if (color) {
-            this.tile = tileWhite;
+            this.tile = "⬜";
         } else {
-            this.tile = tileBlack;
+            this.tile = "⬛";
         }
     }
 
     /**
-     * If the chess piece is not null, it sets the icon to the chess piece icon, otherwise it sets the tile color
+     * Updates the displayed icon for this board square.
+     * If no chess piece is present on the square, the displayed icon is set to the tile color.
+     * Otherwise, the displayed icon is set to the string representation of the chess piece's icon.
      */
-    public void refreshIcon() {
-        if (getChessPiece() != null) {
-            this.icon = getChessPiece().getIcon();
-        } else {
-            this.icon = this.tile;
+    public void refreshDisplayedIcon() {
+        if (this.chessPiece == null) {
+            setDisplayedIcon(this.tile);
+            return;
         }
+        setDisplayedIcon(this.chessPiece.getIcon().getIcon());
+    }
+
+    public void setDisplayedIcon(String displayedIcon) {
+        this.displayedIcon = displayedIcon;
+    }
+
+    /**
+     * Retrieves the displayed icon for this board square.
+     * The displayed icon represents either the icon of the chess piece present
+     * on the square or the tile color if no chess piece is present.
+     *
+     * @return the displayed icon as a string
+     */
+    public String getDisplayedIcon() {
+        return this.displayedIcon;
     }
 }

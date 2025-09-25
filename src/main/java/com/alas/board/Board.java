@@ -1,7 +1,8 @@
 package com.alas.board;
 
 import com.alas.pieces.*;
-import com.alas.util.BasicChessPiece;
+import com.alas.util.ChessPiece;
+import com.alas.util.Team;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,59 +20,62 @@ public class Board {
     public void initializeBoard() {
         wipeBoard();
 
-        resetTeamPieces(true); //white team
-        resetTeamPieces(false); //black team
+        resetTeamPieces(Team.WHITE); //reset the white team
+        resetTeamPieces(Team.BLACK); //reset the black team
 
-        refreshTiles();
+        refreshBoardSquareDisplayedIcon();
         //System.out.println("Board initialized");
     }
 
     /**
      * Places all chess pieces from both teams on their starting positions.
-     * @param team 'true' is white, 'false' is black
+     * @param team 'WHITE' is white, 'BLACK' is black
      */
-    private void resetTeamPieces(boolean team) {
-        int i, j; //indicates rows -> i is back, j is front
-        if (team) { //white
-            j = 6;
-            i = 7;
-        } else { //black
-            i = 0;
-            j = 1;
+    private void resetTeamPieces(Team team) {
+        Integer backRow = null;
+        Integer frontRow = null;
+        if (team == Team.WHITE) {
+            frontRow = 6;
+            backRow = 7;
+        } else if (team == Team.BLACK) {
+            backRow = 0;
+            frontRow = 1;
         }
-        //front row
-        board[j][0].setChessPiece(new Pawn(team));
-        board[j][1].setChessPiece(new Pawn(team));
-        board[j][2].setChessPiece(new Pawn(team));
-        board[j][3].setChessPiece(new Pawn(team));
-        board[j][4].setChessPiece(new Pawn(team));
-        board[j][5].setChessPiece(new Pawn(team));
-        board[j][6].setChessPiece(new Pawn(team));
-        board[j][7].setChessPiece(new Pawn(team));
-        //back row
-        board[i][0].setChessPiece(new Rook(team));
-        board[i][1].setChessPiece(new Knight(team));
-        board[i][2].setChessPiece(new Bishop(team));
-        board[i][3].setChessPiece(new King(team));
-        board[i][4].setChessPiece(new Queen(team));
-        board[i][5].setChessPiece(new Bishop(team));
-        board[i][6].setChessPiece(new Knight(team));
-        board[i][7].setChessPiece(new Rook(team));
+
+        if (frontRow != null) {
+            //front row
+            board[frontRow][0].setChessPiece(new Pawn(team));
+            board[frontRow][1].setChessPiece(new Pawn(team));
+            board[frontRow][2].setChessPiece(new Pawn(team));
+            board[frontRow][3].setChessPiece(new Pawn(team));
+            board[frontRow][4].setChessPiece(new Pawn(team));
+            board[frontRow][5].setChessPiece(new Pawn(team));
+            board[frontRow][6].setChessPiece(new Pawn(team));
+            board[frontRow][7].setChessPiece(new Pawn(team));
+        }
+        if (backRow != null) {
+            //back row
+            board[backRow][0].setChessPiece(new Rook(team));
+            board[backRow][1].setChessPiece(new Knight(team));
+            board[backRow][2].setChessPiece(new Bishop(team));
+            board[backRow][3].setChessPiece(new King(team));
+            board[backRow][4].setChessPiece(new Queen(team));
+            board[backRow][5].setChessPiece(new Bishop(team));
+            board[backRow][6].setChessPiece(new Knight(team));
+            board[backRow][7].setChessPiece(new Rook(team));
+        }
     }
 
     /**
      * Prints the whole board and also adds numbers on borders to help figure out coords of things
      */
     public void printBoard() {
+        refreshBoardSquareDisplayedIcon();
         int vertical = 0;
         int horizontal = 0;
         for(int i = 0; i < board[0].length; i++){
             for(int j = 0; j < board[1].length; j++){
-                if(board[i][j].getIcon() != null) {
-                    System.out.print("[" + board[i][j].getIcon() + "]");
-                } else {
-                    System.out.print("[" + board[i][j].getTile() + "]");
-                }
+                System.out.print("[" + board[i][j].getDisplayedIcon() + "]");
             }
             System.out.println("(" + vertical + ")");
             vertical++;
@@ -92,7 +96,7 @@ public class Board {
             for(int j = 0; j < board[1].length; j++){
                 color = !color;
                 board[i][j] = new BoardSquare(null);
-                board[i][j].setTile(color);
+                board[i][j].setTileColor(color);
             }
         }
     }
@@ -100,40 +104,16 @@ public class Board {
     /**
      * Refreshes all the tile colors
      */
-    public void refreshTiles(){
-        boolean color = false;
+    public void refreshBoardSquareDisplayedIcon(){
         for(int i = 0; i < board[0].length; i++){
-            color = !color;
             for(int j = 0; j < board[1].length; j++){
-                color = !color;
-                if(board[i][j].getChessPiece() != null) {
-                    board[i][j].refreshIcon();
-                }
+                board[i][j].refreshDisplayedIcon();
             }
         }
-    }
-
-    /**
-     * @param piece instance of the chess piece you want to know the location of
-     * @return coords in the table
-     */
-    public int[] getCoordsOfPiece(BasicChessPiece piece) {
-        for (int i=0; i < this.board[0].length; i++) {
-            for (int j=0; j < this.board[1].length; j++) {
-                if (this.board[i][j].getChessPiece() == piece) {
-                    return new int[]{i, j};
-                }
-            }
-        }
-        return null;
     }
 
     public BoardSquare getBoardSquare(int[] coords) {
         return board[coords[0]][coords[1]];
-    }
-
-    public void setBoardSquare(int[] coords, BasicChessPiece chessPiece) {
-        board[coords[0]][coords[1]].setChessPiece(chessPiece);
     }
 
     /**
@@ -141,14 +121,14 @@ public class Board {
      * @param team 'white' if true, 'black' if false
      * @return list of all the pieces of that team and their individual coords on the board
      */
-    public List<String> getListOfPiecesOfTeam(Boolean team) {
+    public List<String> getListOfPiecesOfTeam(Team team) {
         List<String> piecesList = new ArrayList<>(); //list of all pieces and their location
 
         for (int i=0; i < this.board.length; i++) {
             for (int j=0; j < this.board[0].length; j++) {
                 if (this.board[i][j].getChessPiece() != null && this.board[i][j].getChessPiece().getTeam() == team) {
                     int[] pieceCoords = {i, j};
-                    piecesList.add(this.board[i][j].getChessPiece().getIcon() + " at '" + Arrays.toString(pieceCoords) + "'.");
+                    piecesList.add(this.board[i][j].getChessPiece().getIcon().getIcon() + " at '" + Arrays.toString(pieceCoords) + "'.");
                 }
             }
         }
@@ -169,20 +149,19 @@ public class Board {
      * Method to ask the player to make a move.
      * @param team 'white' if true, 'black' if false.
      */
-    public void movePieceOnTurn(Boolean team) {
-        String teamName;
-        if (team) {
-            teamName = "White";
-        } else {
-            teamName = "Black";
-        }
+    public void movePieceOnTurn(Team team) {
         int[] from = {}; //starting coords
         int[] to = {}; //destination coords
 
-        System.out.println("\nIt's " + teamName + "' turn. Make a move!");
+        System.out.println("\nIt's " + team.toString() + "' turn. Make a move!");
 
         System.out.println("These are the pieces of your team: ");
-        getListOfPiecesOfTeam(team).forEach(System.out::println);
+        List<String> piecesOwned = getListOfPiecesOfTeam(team);
+        if (piecesOwned.isEmpty()) {
+            System.out.println("None!");
+        } else {
+            piecesOwned.forEach(System.out::println);
+        }
 
         System.out.println("Enter the coordinates of the piece you wish to move: ");
         boolean searchingFrom = true;
@@ -212,7 +191,7 @@ public class Board {
                 System.out.println("Invalid Move! Insert the coords of a valid position!");
             }
         }
-        refreshTiles();
+        refreshBoardSquareDisplayedIcon();
     }
 
     public static int[] parseCoords(String input) {
@@ -239,14 +218,18 @@ public class Board {
     }
 
     /**
-     * Method to move an object of type BasicChessPiece from one place to the other
+     * Method to move a ChessPiece from one place to the other
      * @param from starting coords of the piece you want to move
      * @param to coords of where you want the piece to go
      */
     public void move(int[] from, int[] to) {
         getBoardSquare(to).setChessPiece(getBoardSquare(from).getChessPiece());
         getBoardSquare(from).setChessPiece(null);
-        String message = String.format("Moved '%s' from '%s' to '%s'.", getBoardSquare(to).getChessPiece().getIcon(), Arrays.toString(from), Arrays.toString(to));
+        String message = String.format("Moved '%s' from '%s' to '%s'.",
+                getBoardSquare(to).getChessPiece().getIcon().getIcon(),
+                Arrays.toString(from),
+                Arrays.toString(to)
+        );
         System.out.println(message);
     }
 }

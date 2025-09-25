@@ -1,31 +1,21 @@
 package com.alas.pieces;
 
-import com.alas.util.BasicChessPiece;
+import com.alas.util.ChessPiece;
 import com.alas.util.PieceIcons;
+import com.alas.util.Team;
 
-public class Queen implements BasicChessPiece {
-
-    private final boolean team;
-    private final String icon;
+public class Queen extends ChessPiece {
 
     /**
      * Constructor of the King chess piece
-     * @param team 'true' is white, 'false' is black
+     * @param team 'WHITE' is white, 'BLACK' is black
      */
-    public Queen (boolean team) {
-        this.team = team;
-        if (team) {
-            this.icon = PieceIcons.QUEEN_W.getIcon();
+    public Queen (Team team) {
+        setTeam(team);
+        if (team == Team.WHITE) {
+            setIcon(PieceIcons.QUEEN_W);
         } else {
-            this.icon = PieceIcons.QUEEN_B.getIcon();
+            setIcon(PieceIcons.QUEEN_B);
         }
-    }
-
-    public Boolean getTeam() {
-        return team;
-    }
-
-    public String getIcon() {
-        return icon;
     }
 }

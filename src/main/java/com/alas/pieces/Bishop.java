@@ -1,31 +1,21 @@
 package com.alas.pieces;
 
-import com.alas.util.BasicChessPiece;
+import com.alas.util.ChessPiece;
 import com.alas.util.PieceIcons;
+import com.alas.util.Team;
 
-public class Bishop implements BasicChessPiece {
-
-    private final boolean team;
-    private final String icon;
+public class Bishop extends ChessPiece {
 
     /**
      * Constructor of the Bishop chess piece
-     * @param team 'true' is white, 'false' is black
+     * @param team 'WHITE' is white, 'BLACK' is black
      */
-    public Bishop (boolean team) {
-        this.team = team;
-        if (team) {
-            this.icon = PieceIcons.BISHOP_W.getIcon();
+    public Bishop (Team team) {
+        setTeam(team);
+        if (team == Team.WHITE) {
+            setIcon(PieceIcons.BISHOP_W);
         } else {
-            this.icon = PieceIcons.BISHOP_B.getIcon();
+            setIcon(PieceIcons.BISHOP_B);
         }
-    }
-
-    public Boolean getTeam() {
-        return team;
-    }
-
-    public String getIcon() {
-        return icon;
     }
 }
