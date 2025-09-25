@@ -1,7 +1,7 @@
 package com.alas.board;
 
+import com.alas.moves.Move;
 import com.alas.pieces.*;
-import com.alas.util.ChessPiece;
 import com.alas.util.Team;
 
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ public class Board {
     public static final int BOARD_SIZE = 8;
     public BoardSquare[][] board = new BoardSquare[BOARD_SIZE][BOARD_SIZE]; //board[vertical][horizontal]
 
+    private final Move moveHelper = new Move(this);
     final Scanner scanner = new Scanner(System.in);
     /**
      * Reset the whole board and places all pieces of both teams in their starting positions
@@ -163,6 +164,7 @@ public class Board {
             piecesOwned.forEach(System.out::println);
         }
 
+        List<int[]> legalMoves = new ArrayList<>();
         System.out.println("Enter the coordinates of the piece you wish to move: ");
         boolean searchingFrom = true;
         while (searchingFrom) { //loops until a valid pair of coords with a valid piece in them is found
@@ -170,8 +172,20 @@ public class Board {
             from = parseCoords(scanner.nextLine());
 
             if (from != null && getBoardSquare(from).getChessPiece() != null && getBoardSquare(from).getChessPiece().getTeam() == team) {
-                searchingFrom = false; //a suitable starting position was found, end loop
-                System.out.println("Piece selected: " + getBoardSquare(from).getIcon() + " at '" + Arrays.toString(from) + "'.");
+                //ask the Move engine for legal moves from the starting coords
+                legalMoves = getValidMovesForPiece(from);
+                if (legalMoves.isEmpty()) {
+                    System.out.println("That piece has no legal moves. Pick another piece.");
+                    continue;
+                } else {
+                    searchingFrom = false; //a suitable starting position was found, end loop
+                }
+                System.out.println("Piece selected: " + getBoardSquare(from).getIcon().getIcon() + " at '" + Arrays.toString(from) + "'\nIt can be moved to: ");
+                if (legalMoves.isEmpty()) {
+                    System.out.println("Nowhere!");
+                } else {
+                    legalMoves.forEach(move -> System.out.println(Arrays.toString(move)));
+                }
             } else {
                 System.out.println("Invalid Move! You can only move pieces of your team!");
             }
@@ -183,12 +197,13 @@ public class Board {
         while (searchingTo) { //loops until a valid pair of coords is found
             System.out.println("To [vertical, horizontal]: ");
             to = parseCoords(scanner.nextLine());
-            //if boardSquare is empty or a piece in it is not an ally
-            if (to != null && getBoardSquare(to).getChessPiece() == null || to != null && getBoardSquare(to).getChessPiece().getTeam() != team) {
+            final int[] check = to;
+            //if boardSquare is one of the coords in legalMoves, move the piece there
+            if (to != null && legalMoves.stream().anyMatch(move -> java.util.Arrays.equals(move, check))) {
                 searchingTo = false; //a suitable destination was found, end loop
                 move(from, to);
             } else {
-                System.out.println("Invalid Move! Insert the coords of a valid position!");
+                System.out.println("Can't move there! Insert valid coordinates!");
             }
         }
         refreshBoardSquareDisplayedIcon();
@@ -231,5 +246,17 @@ public class Board {
                 Arrays.toString(to)
         );
         System.out.println(message);
+    }
+
+    /**
+     * Retrieves a list of all valid moves for a chess piece located at the specified coordinates.
+     *
+     * @param coords An array representing the coordinates of the chess piece on the board.
+     *               The array should have two elements: [row, column].
+     * @return A list of valid moves for the chess piece, where each move is represented as an array [row, column].
+     *         If the coordinates are invalid or there are no valid moves, an empty list is returned.
+     */
+    public List<int[]> getValidMovesForPiece(int[] coords){
+        return moveHelper.getValidMovesForPiece(coords);
     }
 }

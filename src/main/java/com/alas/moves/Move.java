@@ -2,6 +2,7 @@ package com.alas.moves;
 
 import com.alas.board.Board;
 import com.alas.util.ChessPiece;
+import com.alas.util.PieceIcons;
 import com.alas.util.Team;
 
 import java.util.ArrayList;
@@ -14,23 +15,21 @@ public class Move {
         this.board = board;
     }
 
-    public Boolean isPieceValid(ChessPiece piece){
-        List<String> pieces = List.of(
-                "Bishop",
-                "King",
-                "Knight",
-                "Pawn",
-                "Queen",
-                "Rook"
-        );
-        String pieceType = piece.getClass().getSimpleName();
-        return pieces.contains(pieceType);
-    }
-
+    /**
+     * Calculates all valid moves for a chess piece located at the given coordinates.
+     * The valid moves depend on the type of chess piece and the current state of the board.
+     *
+     * @param coords an array containing the row and column indices of the chess piece's current position on the board.
+     *               The format is {row, column}, using a 2D grid with zero-based indexing.
+     * @return a list of valid moves for the chess piece at the specified location.
+     *         Each move is represented as an int array {row, column}, indicating the target position of a valid move.
+     */
     public List<int[]> getValidMovesForPiece(int[] coords){
         ChessPiece piece = board.getBoardSquare(coords).getChessPiece();
         List<int[]> moves = new ArrayList<>();
-        if (isPieceValid(piece)){
+
+        PieceIcons pieceIcon = piece.getIcon();
+        if (pieceIcon != null){
 
             int[] northWest; // Move up-left
             int[] north;     // Move up
@@ -41,9 +40,9 @@ public class Move {
             int[] southWest; //Move down-left
             int[] west;      // Move left
 
-            String pieceType = piece.getClass().getSimpleName();
-            switch (pieceType){
-                case "Bishop":
+            switch (pieceIcon){
+                case PieceIcons.BISHOP_W:
+                case PieceIcons.BISHOP_B:
                     northWest = new int[]{coords[0]-1, coords[1]-1}; // Move up-left
                     northEast = new int[]{coords[0]+1, coords[1]-1}; // Move up-right
                     southEast = new int[]{coords[0]+1, coords[1]+1}; // Move down-right
@@ -70,7 +69,8 @@ public class Move {
                     }
                     break;
 
-                case "King":
+                case PieceIcons.KING_W:
+                case PieceIcons.KING_B:
                     northWest = new int[]{coords[0]-1, coords[1]-1}; // Move up-left
                     north = new int[]{coords[0]+1, coords[1]};       // Move up
                     northEast = new int[]{coords[0]+1, coords[1]-1}; // Move up-right
@@ -113,7 +113,8 @@ public class Move {
                     }
                     break;
 
-                case "Knight":
+                case PieceIcons.KNIGHT_W:
+                case PieceIcons.KNIGHT_B:
                     int[][] knightMoves = {
                             {2, 1},   // Move north 2, east 1
                             {2, -1},  // Move north 2, west 1
@@ -137,7 +138,8 @@ public class Move {
                     }
                     break;
 
-                case "Pawn":
+                case PieceIcons.PAWN_W:
+                case PieceIcons.PAWN_B:
                     Team team = board.getBoardSquare(coords).getChessPiece().getTeam();
                     if (team == Team.WHITE) { //white
                         int[] firstMove = new int[] {coords[0]-2, coords[1]}; // Move up by 2
@@ -178,7 +180,8 @@ public class Move {
                     }
                     break;
 
-                case "Queen":
+                case PieceIcons.QUEEN_W:
+                case PieceIcons.QUEEN_B:
                     northWest = new int[]{coords[0]-1, coords[1]-1}; // Move up-left
                     north = new int[]{coords[0]+1, coords[1]};       // Move up
                     northEast = new int[]{coords[0]+1, coords[1]-1}; // Move up-right
@@ -229,7 +232,8 @@ public class Move {
                     }
                     break;
 
-                case "Rook":
+                case PieceIcons.ROOK_W:
+                case PieceIcons.ROOK_B:
                     north = new int[]{coords[0]+1, coords[1]};       // Move up
                     east = new int[]{coords[0], coords[1]+1};        // Move right
                     south = new int[]{coords[0]-1, coords[1]};       // Move down
@@ -256,6 +260,8 @@ public class Move {
                     }
                     break;
             }
+        } else {
+            System.err.println("Could not recognize the selected piece!");
         }
         return moves;
     }

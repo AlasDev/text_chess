@@ -24,10 +24,17 @@ public class BoardSquare {
         return this.chessPiece.getIcon();
     }
 
-    public String getTile() {
+    public String getTileColor() {
         return tile;
     }
 
+    /**
+     * Sets the tile color for this board square.
+     * Updates the tile to a white square ("⬜") if the provided color is true,
+     * or to a black square ("⬛") if the color is false.
+     *
+     * @param color a boolean indicating the tile color; true for white, false for black
+     */
     public void setTileColor(boolean color) {
         if (color) {
             this.tile = "⬜";
@@ -49,8 +56,8 @@ public class BoardSquare {
         setDisplayedIcon(this.chessPiece.getIcon().getIcon());
     }
 
-    public void setDisplayedIcon(String displayedIcon) {
-        this.displayedIcon = displayedIcon;
+    public void setDisplayedIcon(String newIcon) {
+        this.displayedIcon = newIcon;
     }
 
     /**
